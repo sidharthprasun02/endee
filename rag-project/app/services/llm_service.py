@@ -1,14 +1,25 @@
+import google.generativeai as genai
+from app.core.config import settings
+
+genai.configure(api_key=settings.GEMINI_API_KEY)
+
+
 class LLMService:
-    def generate_answer(self, question: str, context: str):
-        return f"""
-Mock Answer (RAG Demo)
+    def __init__(self):
+        self.model = genai.GenerativeModel("gemini-2.5-flash")
+
+    def generate_answer(self, question: str, context: str) -> str:
+        prompt = f"""
+Answer the question using the context below.
+
+Context:
+{context}
 
 Question:
 {question}
 
 Answer:
-Based on retrieved context, Endee is a vector database used for AI applications and retrieval-augmented generation (RAG).
-
-Context Used:
-{context[:300]}
 """
+
+        response = self.model.generate_content(prompt)
+        return response.text

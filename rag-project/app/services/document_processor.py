@@ -12,9 +12,6 @@ class DocumentProcessor:
         os.makedirs(settings.UPLOAD_DIR, exist_ok=True)
 
     async def save_upload(self, file: UploadFile) -> str:
-        """
-        Save uploaded file locally for processing/audit trail.
-        """
         file_ext = os.path.splitext(file.filename)[1].lower()
         unique_name = f"{uuid.uuid4()}{file_ext}"
         file_path = os.path.join(settings.UPLOAD_DIR, unique_name)
@@ -26,14 +23,15 @@ class DocumentProcessor:
         return file_path
 
     def extract_text_from_pdf(self, file_path: str) -> List[Dict[str, Any]]:
-        """
-        Returns list of page-level text blocks.
-        """
         pages = []
         doc = fitz.open(file_path)
 
         for page_num, page in enumerate(doc, start=1):
             text = page.get_text("text")
+
+            # ✅ DEBUG PRINT (CORRECT PLACE)
+            print("PAGE TEXT SAMPLE:", text[:200])
+
             if text and text.strip():
                 pages.append({
                     "page_number": page_num,
@@ -74,5 +72,8 @@ class DocumentProcessor:
                     "page_number": section["page_number"],
                     "text": chunk
                 })
+
+        # ✅ DEBUG PRINT (CORRECT PLACE)
+        print("TOTAL CHUNKS:", len(processed_chunks))
 
         return processed_chunks

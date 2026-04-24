@@ -8,7 +8,7 @@ from app.services.document_processor import DocumentProcessor
 from app.services.embedding_service import EmbeddingService
 from app.services.endee_client import EndeeClient
 from app.services.rag_service import RAGService
-
+print("🚀 NEW ROUTES FILE IS RUNNING")
 logger = logging.getLogger(__name__)
 router = APIRouter()
 
@@ -44,7 +44,7 @@ async def upload_document(file: UploadFile = File(...)):
             raise HTTPException(status_code=400, detail="No readable text found in document.")
 
         texts = [chunk["text"] for chunk in chunks]
-        embeddings = embedding_service.embed_texts(texts)
+        embeddings = [embedding_service.embed_text(t) for t in texts]
 
         stored_count = endee_client.upsert_chunks(
             document_id=document_id,

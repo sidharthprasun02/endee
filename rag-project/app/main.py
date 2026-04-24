@@ -6,7 +6,7 @@ from app.core.logging_config import setup_logging
 
 from app.core.config import settings
 
-print("API KEY:", settings.OPENAI_API_KEY)
+print("API KEY loaded")   # no actual key shown
 
 setup_logging()
 
